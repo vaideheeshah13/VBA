@@ -1,0 +1,127 @@
+Sub StockAnalysis_Loop():
+'define variables
+    Dim ws As Worksheet
+    Dim i As Long
+    Dim lastrow As Long
+    Dim k As Integer
+        k = 2
+    Dim l As Integer
+        l = 0
+    Dim total_volume As Double
+    Dim Open_Price As Double
+    Dim Close_Price As Double
+    Dim Percent_Change As Double
+    Dim YearlyChange As Double
+
+'loop over each ws
+
+
+    For Each ws In Worksheets
+
+'make/name columns
+
+        ws.Cells(1, 9).Value = "Ticker"
+
+        ws.Cells(1, 10).Value = "Yearly Change"
+
+        ws.Cells(1, 11).Value = "Percent Change"
+
+        ws.Cells(1, 12).Value = "Total volume"
+        
+        ws.Cells(1, 16).Value = "Ticker"
+
+        ws.Cells(1, 17).Value = "Value"
+
+        ws.Cells(2, 15).Value = "Greatest % Increase"
+
+        ws.Cells(3, 15).Value = "Greatest % Decrease"
+
+        ws.Cells(4, 15).Value = "Greatest Total Volume"
+
+      'determining the last row
+
+        lastrow = ws.Cells(Rows.Count, 1).End(xlUp).Row
+
+'looping through each row
+'<> if two values are equal then true
+
+        For i = 2 To lastrow
+
+            If ws.Cells(i, 1).Value <> ws.Cells(i - 1, 1).Value Then
+                
+                Open_Price = ws.Cells(i, 3).Value
+
+            End If
+
+                total_volume = total_volume + ws.Cells(i, 7)
+            
+            If ws.Cells(i, 1).Value <> ws.Cells(i + 1, 1).Value Then
+
+                ws.Cells(k, 9) = ws.Cells(i, 1).Value
+
+                ws.Cells(k, 12) = total_volume
+                
+                Close_Price = ws.Cells(i, 6).Value
+'calc yearly change
+                         
+            If Open_Price <> 0 Then
+
+                PercentChange = ((Close_Price - Open_Price) / Open_Price)
+
+                YearlyChange = Close_Price - Open_Price
+
+             Else
+
+                 PercentChange = 0
+
+                 YearlyChange = 0
+
+              End If
+
+'print percent change and yearly change as percents
+              
+                ws.Cells(k, 11) = PercentChange
+
+                ws.Cells(k, 11).NumberFormat = "0.00%"
+
+                ws.Cells(k, 10) = YearlyChange
+
+ 'conditionals
+                    If ws.Cells(k, 10).Value > 0 Then
+
+                        ws.Cells(k, 10).Interior.ColorIndex = 4
+
+                    Else
+
+                        ws.Cells(k, 10).Interior.ColorIndex = 3
+
+                    End If
+
+                total_volume = 0
+
+                k = k + 1
+
+                l = 0
+
+            End If
+
+        Next i
+
+    k = 2
+
+    Next ws                                            'repeat'
+
+
+End Sub
+
+Resources:
+
+'https://docs.microsoft.com/en-us/office/vba/language/concepts/getting-started/using-ifthenelse-statements
+'https://www.automateexcel.com/vba/loops/
+'https://www.mrexcel.com/excel-tips/find-the-last-row-of-data-in-a-range/
+'https://support.microsoft.com/en-us/topic/macro-to-loop-through-all-worksheets-in-a-workbook-feef14e3-97cf-00e2-538b-5da40186e2b0
+'https://docs.microsoft.com/en-us/office/vba/api/excel.range.specialcells
+'http://www.functionx.com/vbaexcel/keywords/long.htm
+'http://pyweb.swan.ac.uk/~allton/VisualBasic/node9.html
+'https://software-solutions-online.com/next-without-for-compile-error-in-excel-vba-what-does-it-mean-and-how-do-you-fix-it/
+'https://stackoverflow.com/questions/32700874/how-does-one-subtract-the-value-from-the-offset-value-of-any-given-i-in-a-for
